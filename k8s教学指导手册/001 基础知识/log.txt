@@ -1,0 +1,37 @@
+#!/bin/bash
+function log() {
+    case $1 in
+        "info")
+            echo -e `date '+%Y-%m-%d %H:%M:%S'`"\t[\e[32m INFO \e[0m] $2"
+            ;;
+        "error")
+            echo -e `date '+%Y-%m-%d %H:%M:%S'`"\t[\e[31m error \e[0m] $2"
+            ;;
+        *)
+            echo -e `date '+%Y-%m-%d %H:%M:%S'`"\t[\e[32m INFO \e[0m] $2"
+    esac
+}
+
+function check_api(){
+while true;
+do
+    sleep 10
+    nslookup www.kudevops.cn >>/dev/null
+    if [ $? -eq 0 ];then
+      log info "Request right" >>~/check_api.log
+    else
+      log error "Request error" >>~/check_api_error.log
+    fi
+done
+}
+case $1 in
+   "run")
+   check_api
+   ;;
+   "-h")
+   echo "run      Perform testing"
+   ;;
+   "*")
+   echo "-h       Get help"
+   ;;
+esac
